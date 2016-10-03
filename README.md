@@ -1,6 +1,8 @@
 # pajbot
 [![Build Status](https://travis-ci.org/pajlada/pajbot.svg?branch=master)](https://travis-ci.org/pajlada/pajbot)
 
+# WE ARE USING THIS REPO TO START MOVING OVER TO PAJBOT2
+
 pajbot is a twitch chat bot created by [pajlada](http://twitch.tv/pajlada).  
 [Website](https://pajbot.com)
 
