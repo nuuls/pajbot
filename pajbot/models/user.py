@@ -38,7 +38,6 @@ class User(Base):
         self.username = username.lower()
         self.username_raw = username
         self.level = 100
-        self.points = 0
         self.subscriber = False
         self.minutes_in_chat_online = 0
         self.minutes_in_chat_offline = 0
@@ -57,7 +56,6 @@ class User(Base):
         user.username_raw = username
         user.level = 2000
         user.subscriber = True
-        user.points = 1234
         user.minutes_in_chat_online = 5
         user.minutes_in_chat_offline = 15
 
@@ -216,27 +214,6 @@ class UserSQL:
         self.user_model.subscriber = value
 
     @property
-    def points(self):
-        self.sql_load()
-        return self.user_model.points
-
-    @points.setter
-    def points(self, value):
-        self.sql_load()
-        self.user_model.points = value
-
-    @property
-    def points_rank(self):
-        if self.shared_db_session:
-            query_data = self.shared_db_session.query(sqlalchemy.func.count(User.id)).filter(User.points > self.points).one()
-        else:
-            with DBManager.create_session_scope(expire_on_commit=False) as db_session:
-                query_data = db_session.query(sqlalchemy.func.count(User.id)).filter(User.points > self.points).one()
-
-        rank = int(query_data[0]) + 1
-        return rank
-
-    @property
     def duel_stats(self):
         self.sql_load()
         return self.user_model.duel_stats
@@ -251,6 +228,7 @@ class UserRedis:
     SS_KEYS = [
             'num_lines',
             'tokens',
+            'points',
             ]
     HASH_KEYS = [
             'last_seen',
@@ -265,6 +243,7 @@ class UserRedis:
 
     SS_DEFAULTS = {
             'num_lines': 0,
+            'points': 0,
             'tokens': 0,
             }
     HASH_DEFAULTS = {
@@ -338,6 +317,26 @@ class UserRedis:
         return self._last_seen is None
 
     @property
+    def points(self):
+        if self.save_to_redis:
+            self.redis_load()
+            return self.values['points']
+        else:
+            return self.values.get('points', 0)
+
+    @points.setter
+    def points(self, value):
+        # Set cached value
+        self.values['points'] = value
+
+        if self.save_to_redis:
+            # Set redis value
+            if value != 0:
+                self.redis.zadd('{streamer}:users:points'.format(streamer=StreamHelper.get_streamer()), self.username, value)
+            else:
+                self.redis.zrem('{streamer}:users:points'.format(streamer=StreamHelper.get_streamer()), self.username)
+
+    @property
     def num_lines(self):
         if self.save_to_redis:
             self.redis_load()
@@ -380,6 +379,15 @@ class UserRedis:
     @property
     def num_lines_rank(self):
         key = '{streamer}:users:num_lines'.format(streamer=StreamHelper.get_streamer())
+        rank = self.redis.zrevrank(key, self.username)
+        if rank is None:
+            return self.redis.zcard(key)
+        else:
+            return rank + 1
+
+    @property
+    def points_rank(self):
+        key = '{streamer}:users:points'.format(streamer=StreamHelper.get_streamer())
         rank = self.redis.zrevrank(key, self.username)
         if rank is None:
             return self.redis.zcard(key)
