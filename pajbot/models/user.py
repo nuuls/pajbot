@@ -3,7 +3,6 @@ import json
 import logging
 from contextlib import contextmanager
 
-import sqlalchemy
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import Integer
