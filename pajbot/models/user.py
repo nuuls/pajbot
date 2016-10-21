@@ -221,7 +221,7 @@ class UserSQL:
 
 class UserRedis:
     SS_KEYS = [
-            'num_lines',
+            'total_message_count',
             'tokens',
             'points',
             ]
@@ -237,7 +237,7 @@ class UserRedis:
     FULL_KEYS = SS_KEYS + HASH_KEYS + BOOL_KEYS
 
     SS_DEFAULTS = {
-            'num_lines': 0,
+            'total_message_count': 0,
             'points': 0,
             'tokens': 0,
             }
@@ -335,21 +335,16 @@ class UserRedis:
     def num_lines(self):
         if self.save_to_redis:
             self.redis_load()
-            return self.values['num_lines']
+            return self.values['total_message_count']
         else:
-            return self.values.get('num_lines', 0)
+            return self.values.get('total_message_count', 0)
 
     @num_lines.setter
     def num_lines(self, value):
         # Set cached value
-        self.values['num_lines'] = value
+        self.values['total_message_count'] = value
 
-        if self.save_to_redis:
-            # Set redis value
-            if value != 0:
-                self.redis.zadd('{streamer}:users:num_lines'.format(streamer=StreamHelper.get_streamer()), self.username, value)
-            else:
-                self.redis.zrem('{streamer}:users:num_lines'.format(streamer=StreamHelper.get_streamer()), self.username)
+        # We no longer save lines in pajbot1
 
     @property
     def tokens(self):
@@ -373,7 +368,7 @@ class UserRedis:
 
     @property
     def num_lines_rank(self):
-        key = '{streamer}:users:num_lines'.format(streamer=StreamHelper.get_streamer())
+        key = '{streamer}:users:total_message_count'.format(streamer=StreamHelper.get_streamer())
         rank = self.redis.zrevrank(key, self.username)
         if rank is None:
             return self.redis.zcard(key)
