@@ -1,7 +1,6 @@
 import logging
 
-from flask_restful import reqparse
-from flask_restful import Resource
+from flask_restful import reqparse, Resource
 
 import pajbot.modules
 import pajbot.utils

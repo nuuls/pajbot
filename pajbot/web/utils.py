@@ -4,13 +4,9 @@ import datetime
 import json
 import logging
 import urllib.parse
-from functools import update_wrapper
-from functools import wraps
+from functools import update_wrapper, wraps
 
-from flask import abort
-from flask import make_response
-from flask import request
-from flask import session
+from flask import abort, make_response, request, session
 from flask.ext.scrypt import generate_password_hash
 from flask_restful import reqparse
 

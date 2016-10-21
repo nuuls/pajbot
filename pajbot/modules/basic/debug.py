@@ -3,8 +3,7 @@ import datetime
 import logging
 
 import pajbot.models
-from pajbot.modules import BaseModule
-from pajbot.modules import ModuleType
+from pajbot.modules import BaseModule, ModuleType
 from pajbot.modules.basic import BasicCommandsModule
 
 log = logging.getLogger(__name__)

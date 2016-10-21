@@ -1,17 +1,12 @@
 import logging
 
-from flask import abort
-from flask import redirect
-from flask import render_template
-from flask import request
-from flask import session
+from flask import abort, redirect, render_template, request, session
 from sqlalchemy.orm import joinedload
 
 import pajbot.managers
 from pajbot.managers.adminlog import AdminLogManager
 from pajbot.managers.db import DBManager
-from pajbot.models.command import Command
-from pajbot.models.command import CommandData
+from pajbot.models.command import Command, CommandData
 from pajbot.models.module import ModuleManager
 from pajbot.models.sock import SocketClientManager
 from pajbot.web.utils import requires_level

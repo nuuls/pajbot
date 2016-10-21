@@ -1,9 +1,6 @@
 import logging
 
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Column, DateTime, Integer, String
 
 from pajbot.managers.db import Base
 from pajbot.utils import time_ago

@@ -1,5 +1,4 @@
-from flask.ext.assets import Bundle
-from flask.ext.assets import Environment
+from flask.ext.assets import Bundle, Environment
 
 
 def init(app):

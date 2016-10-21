@@ -1,19 +1,15 @@
 import datetime
 import logging
 
-from flask import abort
-from flask import url_for
-from flask_restful import reqparse
-from flask_restful import Resource
-from sqlalchemy import and_
-from sqlalchemy import func
+from flask import abort, url_for
+from flask_restful import reqparse, Resource
+from sqlalchemy import and_, func
 from sqlalchemy.orm import noload
 
 import pajbot.web.utils
 from pajbot.managers.db import DBManager
-from pajbot.models.pleblist import PleblistManager
-from pajbot.models.pleblist import PleblistSong
-from pajbot.models.pleblist import PleblistSongInfo
+from pajbot.models.pleblist import (PleblistManager, PleblistSong,
+                                    PleblistSongInfo)
 from pajbot.models.stream import Stream
 from pajbot.web import app
 

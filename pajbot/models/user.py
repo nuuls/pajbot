@@ -3,14 +3,10 @@ import json
 import logging
 from contextlib import contextmanager
 
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, Integer, String
 
 from pajbot.exc import FailedCommand
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
+from pajbot.managers.db import Base, DBManager
 from pajbot.managers.redis import RedisManager
 from pajbot.managers.schedule import ScheduleManager
 from pajbot.managers.time import TimeManager

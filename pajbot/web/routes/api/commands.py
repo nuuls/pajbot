@@ -1,8 +1,7 @@
 import json
 import logging
 
-from flask_restful import reqparse
-from flask_restful import Resource
+from flask_restful import reqparse, Resource
 from sqlalchemy.orm import joinedload
 
 import pajbot.modules
@@ -10,8 +9,7 @@ import pajbot.utils
 import pajbot.web.utils
 from pajbot.managers.adminlog import AdminLogManager
 from pajbot.managers.db import DBManager
-from pajbot.models.command import Command
-from pajbot.models.command import CommandData
+from pajbot.models.command import Command, CommandData
 from pajbot.models.module import ModuleManager
 from pajbot.models.sock import SocketClientManager
 from pajbot.utils import find

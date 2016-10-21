@@ -1,9 +1,7 @@
 import datetime
 import logging
 
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import Integer
+from sqlalchemy import Column, DateTime, Integer
 
 from pajbot.managers.db import Base
 

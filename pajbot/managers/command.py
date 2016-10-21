@@ -5,10 +5,8 @@ from collections import UserDict
 from sqlalchemy.orm import joinedload
 
 from pajbot.managers.db import DBManager
-from pajbot.models.command import Command
-from pajbot.models.command import CommandData
-from pajbot.models.command import CommandExample
-from pajbot.models.command import parse_command_for_web
+from pajbot.models.command import (Command, CommandData, CommandExample,
+                                   parse_command_for_web)
 from pajbot.utils import find
 
 log = logging.getLogger(__name__)

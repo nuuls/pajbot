@@ -1,8 +1,7 @@
 import logging
 
 import markdown
-from flask import Markup
-from flask import render_template
+from flask import Markup, render_template
 
 from pajbot.managers.db import DBManager
 from pajbot.models.user import User

@@ -7,8 +7,7 @@ import sys
 import time
 from contextlib import contextmanager
 
-from colorama import Fore
-from colorama import Style
+from colorama import Fore, Style
 
 import pajbot.exc
 

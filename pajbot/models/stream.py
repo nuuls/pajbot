@@ -6,19 +6,12 @@ import logging
 import math
 import urllib
 
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.dialects.mysql import BIGINT
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import reconstructor
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import reconstructor, relationship
 
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
+from pajbot.managers.db import Base, DBManager
 from pajbot.managers.handler import HandlerManager
 from pajbot.managers.redis import RedisManager
 

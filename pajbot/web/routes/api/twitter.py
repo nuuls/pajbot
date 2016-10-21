@@ -1,5 +1,4 @@
-from flask_restful import reqparse
-from flask_restful import Resource
+from flask_restful import reqparse, Resource
 
 from pajbot.managers.db import DBManager
 from pajbot.models.sock import SocketClientManager

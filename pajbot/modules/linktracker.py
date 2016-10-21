@@ -2,13 +2,10 @@ import datetime
 import logging
 from urllib.parse import urlsplit
 
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import Integer
+from sqlalchemy import Column, DateTime, Integer
 from sqlalchemy.dialects.mysql import TEXT
 
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
+from pajbot.managers.db import Base, DBManager
 from pajbot.managers.handler import HandlerManager
 from pajbot.modules import BaseModule
 

@@ -5,21 +5,16 @@ import urllib.parse
 
 import requests
 from bs4 import BeautifulSoup
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.mysql import TEXT
 
 import pajbot.managers
 import pajbot.models
-from pajbot.actions import Action
-from pajbot.actions import ActionQueue
+from pajbot.actions import Action, ActionQueue
 from pajbot.apiwrappers import SafeBrowsingAPI
 from pajbot.managers.adminlog import AdminLogManager
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
-from pajbot.modules import BaseModule
-from pajbot.modules import ModuleSetting
+from pajbot.managers.db import Base, DBManager
+from pajbot.modules import BaseModule, ModuleSetting
 
 log = logging.getLogger(__name__)
 

@@ -4,9 +4,8 @@ import socket
 import urllib
 
 import irc
-from irc.client import InvalidCharacters
-from irc.client import MessageTooLong
-from irc.client import ServerNotConnectedError
+from irc.client import (InvalidCharacters, MessageTooLong,
+                        ServerNotConnectedError)
 
 from pajbot.utils import find
 

@@ -1,12 +1,7 @@
 import logging
 
-from flask import redirect
-from flask import render_template
-from flask import request
-from flask import session
-from flask import url_for
-from flask_oauthlib.client import OAuth
-from flask_oauthlib.client import OAuthException
+from flask import redirect, render_template, request, session, url_for
+from flask_oauthlib.client import OAuth, OAuthException
 
 from pajbot.managers.db import DBManager
 from pajbot.models.user import User

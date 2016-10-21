@@ -1,15 +1,11 @@
 import json
 import logging
 
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.dialects.mysql import TEXT
 from sqlalchemy.orm import reconstructor
 
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
+from pajbot.managers.db import Base, DBManager
 from pajbot.models.action import ActionParser
 from pajbot.utils import find
 

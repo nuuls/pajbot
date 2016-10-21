@@ -2,9 +2,7 @@ import logging
 from contextlib import contextmanager
 
 from pajbot.managers.db import DBManager
-from pajbot.models.user import User
-from pajbot.models.user import UserCombined
-from pajbot.models.user import UserSQLCache
+from pajbot.models.user import User, UserCombined, UserSQLCache
 from pajbot.utils import time_method
 
 log = logging.getLogger(__name__)

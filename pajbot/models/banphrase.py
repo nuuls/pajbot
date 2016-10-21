@@ -2,16 +2,10 @@ import argparse
 import logging
 
 import sqlalchemy
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import Enum
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
+from pajbot.managers.db import Base, DBManager
 from pajbot.utils import find
 
 log = logging.getLogger('pajbot')

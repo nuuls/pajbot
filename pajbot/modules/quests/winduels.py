@@ -2,8 +2,7 @@ import logging
 
 from pajbot.managers.handler import HandlerManager
 from pajbot.managers.redis import RedisManager
-from pajbot.modules import ModuleSetting
-from pajbot.modules import QuestModule
+from pajbot.modules import ModuleSetting, QuestModule
 from pajbot.modules.quests import BaseQuest
 
 log = logging.getLogger(__name__)

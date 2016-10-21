@@ -6,13 +6,10 @@ import time
 from queue import Queue
 
 import requests
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, String
 
 from pajbot.managers.connection import CustomServerConnection
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
+from pajbot.managers.db import Base, DBManager
 
 log = logging.getLogger('pajbot')
 

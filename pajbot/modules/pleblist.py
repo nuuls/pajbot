@@ -6,10 +6,8 @@ from sqlalchemy import func
 import pajbot.models
 from pajbot.managers.db import DBManager
 from pajbot.managers.schedule import ScheduleManager
-from pajbot.models.pleblist import PleblistManager
-from pajbot.models.pleblist import PleblistSong
-from pajbot.modules import BaseModule
-from pajbot.modules import ModuleSetting
+from pajbot.models.pleblist import PleblistManager, PleblistSong
+from pajbot.modules import BaseModule, ModuleSetting
 from pajbot.streamhelper import StreamHelper
 
 log = logging.getLogger(__name__)

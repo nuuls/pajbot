@@ -4,21 +4,14 @@ import logging
 import re
 import time
 
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.dialects.mysql import TEXT
-from sqlalchemy.orm import reconstructor
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import reconstructor, relationship
 
 from pajbot.exc import FailedCommand
 from pajbot.managers.db import Base
 from pajbot.managers.schedule import ScheduleManager
-from pajbot.models.action import ActionParser
-from pajbot.models.action import RawFuncAction
+from pajbot.models.action import ActionParser, RawFuncAction
 
 log = logging.getLogger(__name__)
 

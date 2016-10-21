@@ -1,9 +1,7 @@
 import json
 import logging
 
-from flask import abort
-from flask import Blueprint
-from flask import render_template
+from flask import abort, Blueprint, render_template
 
 from pajbot.managers.redis import RedisManager
 from pajbot.streamhelper import StreamHelper

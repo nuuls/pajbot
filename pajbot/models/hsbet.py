@@ -1,9 +1,6 @@
 import logging
 
-from sqlalchemy import Column
-from sqlalchemy import Enum
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
+from sqlalchemy import Column, Enum, ForeignKey, Integer
 
 from pajbot.managers.db import Base
 

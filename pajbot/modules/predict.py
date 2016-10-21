@@ -2,18 +2,12 @@ import datetime
 import logging
 
 import sqlalchemy
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 
 import pajbot.models
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
-from pajbot.modules import BaseModule
-from pajbot.modules import ModuleSetting
+from pajbot.managers.db import Base, DBManager
+from pajbot.modules import BaseModule, ModuleSetting
 
 log = logging.getLogger(__name__)
 

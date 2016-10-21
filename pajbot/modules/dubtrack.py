@@ -6,8 +6,7 @@ import re
 import requests
 
 import pajbot.models
-from pajbot.modules import BaseModule
-from pajbot.modules import ModuleSetting
+from pajbot.modules import BaseModule, ModuleSetting
 
 log = logging.getLogger(__name__)
 

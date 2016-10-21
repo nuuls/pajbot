@@ -2,13 +2,10 @@ import json
 import logging
 
 import sqlalchemy
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, String
 from sqlalchemy.dialects.mysql import TEXT
 
-from pajbot.managers.db import Base
-from pajbot.managers.db import DBManager
+from pajbot.managers.db import Base, DBManager
 from pajbot.utils import find
 
 log = logging.getLogger('pajbot')

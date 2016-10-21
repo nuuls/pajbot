@@ -8,10 +8,8 @@ from pajbot.managers.db import DBManager
 from pajbot.managers.handler import HandlerManager
 from pajbot.managers.redis import RedisManager
 from pajbot.managers.schedule import ScheduleManager
-from pajbot.models.hsbet import HSBetBet
-from pajbot.models.hsbet import HSBetGame
-from pajbot.modules import BaseModule
-from pajbot.modules import ModuleSetting
+from pajbot.models.hsbet import HSBetBet, HSBetGame
+from pajbot.modules import BaseModule, ModuleSetting
 from pajbot.streamhelper import StreamHelper
 
 log = logging.getLogger(__name__)
