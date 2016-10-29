@@ -451,6 +451,7 @@ class UserRedis:
     @property
     def ignored(self):
         self.redis_load()
+        # TODO: this should be pajbot2 instead
         return self.values['ignored']
 
     @ignored.setter
@@ -467,6 +468,7 @@ class UserRedis:
     @property
     def banned(self):
         self.redis_load()
+        # TODO: this should be pajbot2 instead
         return self.values['banned']
 
     @banned.setter
@@ -540,6 +542,7 @@ class UserCombined(UserRedis, UserSQL):
     @property
     def last_seen(self):
         ret = TimeManager.localize(self._last_seen)
+        # TODO: this should be pajbot2 instead (?)
         return ret
 
     @last_seen.setter
@@ -548,6 +551,7 @@ class UserCombined(UserRedis, UserSQL):
 
     @property
     def last_active(self):
+        # TODO: this should be pajbot2 instead (?)
         if self._last_active is None:
             return None
         return TimeManager.localize(self._last_active)
