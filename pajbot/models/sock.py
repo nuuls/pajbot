@@ -15,6 +15,7 @@ class SocketResource:
         except OSError:
             pass
         self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind(self.socket_file)
         self.server.listen(5)
 
