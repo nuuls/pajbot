@@ -7,8 +7,8 @@ import urllib.parse
 from functools import update_wrapper, wraps
 
 from flask import abort, make_response, request, session
-from flask.ext.scrypt import generate_password_hash
 from flask_restful import reqparse
+from flask_scrypt import generate_password_hash
 
 import pajbot.exc
 import pajbot.managers
@@ -185,6 +185,7 @@ def jsonify_list(key, query, base_url=None,
 
     return payload
 
+
 paginate_parser = reqparse.RequestParser()
 paginate_parser.add_argument('limit', type=int, required=False)
 paginate_parser.add_argument('offset', type=int, required=False)
@@ -206,3 +207,11 @@ def create_pleblist_login(bot_config):
     """ Throws an InvalidLogin exception if the login was not good """
     salted_password = generate_password_hash(bot_config['web']['pleblist_password'], bot_config['web']['pleblist_password_salt'])
     return base64.b64encode(salted_password).decode('utf8')
+
+
+def seconds_to_vodtime(t):
+    s = int(t)
+    h = s / 3600
+    m = s % 3600 / 60
+    s = s % 60
+    return '%dh%02dm%02ds' % (h, m, s)

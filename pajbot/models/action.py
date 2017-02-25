@@ -117,7 +117,7 @@ class IfSubstitution:
 class Substitution:
     argument_substitution_regex = re.compile(r'\$\((\d+)\)')
     substitution_regex = re.compile(r'\$\(([a-z_]+)(\;[0-9]+)?(\:[\w\.\/ -]+|\:\$\([\w_:;\._\/ -]+\))?(\|[\w]+(\([\w%:/ +-]+\))?)*(\,[\'"]{1}[\w \|$;_\-:()\.]+[\'"]{1}){0,2}\)')
-    urlfetch_substitution_regex = re.compile(r'\$\(urlfetch ([\w-:/&=.,/? ()]+)\)')
+    urlfetch_substitution_regex = re.compile(r'\$\(urlfetch ([\w-:/&=.,/? ()_]+)\)')
     urlfetch_substitution_regex_all = re.compile(r'\$\(urlfetch (.+?)\)')
 
     def __init__(self, cb, needle, key=None, argument=None, filters=[]):
@@ -337,6 +337,7 @@ def get_substitutions(string, bot):
         method_mapping['args'] = bot.get_args_value
         method_mapping['strictargs'] = bot.get_strictargs_value
         method_mapping['notify'] = bot.get_notify_value
+        method_mapping['command'] = bot.get_command_value
     except AttributeError:
         pass
 

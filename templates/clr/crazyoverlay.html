@@ -6,12 +6,24 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lettering.js/0.7.0/jquery.lettering.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/textillate/0.4.0/jquery.textillate.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css" />
+        <link rel="stylesheet" type="text/css" href="/static/css/clr.overlay.css" />
         {% assets 'clr_overlay_css' %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
         {% endassets %}
+        <style>
+        body {
+            background-color: rgba(0,0,0,255);
+            margin: 0px auto;
+            overflow: hidden;
+        }
+
+        .notifications {
+            display: none;
+        }
+        </style>
         <script type="text/javascript">
-var ws_host = '{{ 'wss' if site.websocket.ssl else 'ws' }}://{{ site.websocket.host }}';
-var ws_port = {{ site.websocket.port }};
+var ws_host = 'wss://paj.pajlada.se';
+var ws_port = 2320;
         </script>
         {% assets 'clr_overlay_js' %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>

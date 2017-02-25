@@ -83,6 +83,17 @@ class SubAlertModule(BaseModule):
                     'min_str_len': 10,
                     'max_str_len': 400,
                     }),
+            ModuleSetting(
+                key='grant_points_on_sub',
+                label='Give points to user when they subscribe/resubscribe. 0 = off',
+                type='number',
+                required=True,
+                placeholder='',
+                default=0,
+                constraints={
+                    'min_value': 0,
+                    'max_value': 50000,
+                    }),
                 ]
 
     def __init__(self):
@@ -90,12 +101,21 @@ class SubAlertModule(BaseModule):
         self.new_sub_regex = re.compile('^(\w+) just subscribed')
         self.valid_usernames = ('twitchnotify', 'pajlada')
 
+    def on_sub_shared(self, user):
+        if self.settings['grant_points_on_sub'] <= 0:
+            return
+
+        user.points += self.settings['grant_points_on_sub']
+        self.bot.say('{} was given {} points for subscribing! FeelsAmazingMan'.format(user.username_raw, self.settings['grant_points_on_sub']))
+
     def on_new_sub(self, user):
         """
         A new user just subscribed.
         Send the event to the websocket manager, and send a customized message in chat.
         Also increase the number of active subscribers in the database by one.
         """
+
+        self.on_sub_shared(user)
 
         self.bot.kvi['active_subs'].inc()
 
@@ -114,6 +134,8 @@ class SubAlertModule(BaseModule):
         Send the event to the websocket manager, and send a customized message in chat.
         """
 
+        self.on_sub_shared(user)
+
         payload = {'username': user.username_raw, 'num_months': num_months}
         self.bot.websocket_manager.emit('resub', payload)
 
@@ -127,7 +149,7 @@ class SubAlertModule(BaseModule):
         if whisper is False and source.username in self.valid_usernames:
             # Did twitchnotify tell us about a new sub?
             m = self.new_sub_regex.search(message)
-            if m:
+            if m and 'subscribed to ' not in message:
                 username = m.group(1)
                 with UserManager.get().get_user_context(username) as user:
                     self.on_new_sub(user)
@@ -138,6 +160,7 @@ class SubAlertModule(BaseModule):
             return
 
         if tags['msg-id'] == 'resub':
+            # TODO: Should we check room id with streamer ID here? Maybe that's for pajbot2 instead
             num_months = int(tags['msg-param-months'])
             self.on_resub(source, num_months)
             HandlerManager.trigger('on_user_resub', source, num_months)
