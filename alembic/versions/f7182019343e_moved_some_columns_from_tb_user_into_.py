@@ -27,32 +27,9 @@ from sqlalchemy import DateTime
 from sqlalchemy import Integer
 from sqlalchemy import String
 
-from pajbot.utils import load_config
-from pajbot.managers.redis import RedisManager
-
 Session = sessionmaker()
 
 Base = declarative_base()
-
-tag = context.get_tag_argument()
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--config', '-c',
-                    default='config.ini',
-                    help='Specify which config file to use '
-                            '(default: config.ini)')
-custom_args = None
-if tag is not None:
-    custom_args = tag.replace('"', '').split()
-args, unknown = parser.parse_known_args(args=custom_args)
-
-pb_config = load_config(args.config)
-
-redis_options = {}
-if 'redis' in pb_config:
-    redis_options = pb_config._sections['redis']
-
-RedisManager.init(**redis_options)
 
 
 class User(Base):
@@ -74,6 +51,10 @@ class User(Base):
 
 
 def upgrade():
+    from pajbot.utils import alembic_init
+    from pajbot.managers.redis import RedisManager
+    alembic_init()
+
     bind = op.get_bind()
     session = Session(bind=bind)
 

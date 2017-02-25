@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 
 class UserManager:
     data = {}
+    data_id = {}
     _instance = None
 
     def __init__(self):
@@ -24,26 +25,46 @@ class UserManager:
     def save(self, user):
         """ Saves all data for a user.
         This means cached data (like his debts) and SQL """
-        self.data[user.username] = user.save()
+        data = user.save()
+        self.data[user.username] = data
+        self.data_id[user.twitch_id] = data
 
     def get_static(username, db_session=None, user_model=None, redis=None):
-        return UserCombined(username, db_session=db_session, user_model=user_model, redis=redis)
+        return UserCombined(username=username, db_session=db_session, user_model=user_model, redis=redis)
 
     def get_user(self, username, db_session=None, user_model=None, redis=None):
         """ Return to call UserManager.save(user.username) an the user object manually when done with if. """
-        user = UserCombined(username, db_session=db_session, user_model=user_model, redis=redis)
+        user = UserCombined(username=username, db_session=db_session, user_model=user_model, redis=redis)
         user.load(**self.data.get(username, {}))
+        return user
+
+    def get_user_by_id(self, twitch_id, db_session=None, user_model=None, redis=None):
+        """ Return to call UserManager.save(user.username) an the user object manually when done with if. """
+        user = UserCombined(twitch_id=twitch_id, db_session=db_session, user_model=user_model, redis=redis)
+        user.load(**self.data_id.get(twitch_id, {}))
         return user
 
     @contextmanager
     def get_user_context(self, username):
         try:
-            user = UserCombined(username)
+            user = UserCombined(username=username)
             user.load(**self.data.get(username, {}))
 
             yield user
         except:
             log.exception('Uncaught exception in UserManager::get_user({})'.format(username))
+        finally:
+            self.save(user)
+
+    @contextmanager
+    def get_user_context_by_id(self, twitch_id):
+        try:
+            user = UserCombined(twitch_id=twitch_id)
+            user.load(**self.data_id.get(twitch_id, {}))
+
+            yield user
+        except:
+            log.exception('Uncaught exception in UserManager::get_user({})'.format(twitch_id))
         finally:
             self.save(user)
 
@@ -106,7 +127,7 @@ class UserManager:
         # from pajbot.utils import print_traceback
         # print_traceback()
 
-        # log.debug('UserManager::find({})'.format(username))
+        log.debug('UserManager::find({})'.format(username))
 
         # Return None if the username is an empty string!
         if username == '':

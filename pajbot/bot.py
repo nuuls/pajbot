@@ -710,10 +710,24 @@ class Bot:
         if event.source.user == self.nickname:
             return False
 
+        # log.debug(chatconn)
+        # log.debug(event)
+
         username = event.source.user.lower()
 
+        twitch_id = None
+
+        for tag in event.tags:
+            if tag['key'] == 'user-id':
+                twitch_id = tag['value']
+
+        if twitch_id is None:
+            log.error('No twitch id in this message!')
+            return
+
         # We use .lower() in case twitch ever starts sending non-lowercased usernames
-        with self.users.get_user_context(username) as source:
+        with self.users.get_user_context_by_id(twitch_id) as source:
+            source.username = username
             res = HandlerManager.trigger('on_pubmsg',
                     source, event.arguments[0],
                     stop_on_false=True)

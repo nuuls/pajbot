@@ -4,10 +4,7 @@ import logging
 from contextlib import contextmanager
 
 import sqlalchemy
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, Integer, String
 
 from pajbot.exc import FailedCommand
 from pajbot.managers.db import Base
@@ -25,6 +22,7 @@ class User(Base):
     __tablename__ = 'tb_user'
 
     id = Column(Integer, primary_key=True)
+    twitch_id = Column(String(48), nullable=True, index=True, unique=True, server_default=sqlalchemy.text('NULL'))
     username = Column(String(32), nullable=False, index=True, unique=True)
     username_raw = Column(String(32))
     level = Column(Integer, nullable=False, default=100)
@@ -33,10 +31,11 @@ class User(Base):
     minutes_in_chat_online = Column(Integer, nullable=False, default=0)
     minutes_in_chat_offline = Column(Integer, nullable=False, default=0)
 
-    def __init__(self, username):
+    def __init__(self):
         self.id = None
-        self.username = username.lower()
-        self.username_raw = username
+        self.twitch_id = None
+        self.username = ''
+        self.username_raw = ''
         self.level = 100
         self.points = 0
         self.subscriber = False
@@ -96,17 +95,40 @@ class UserSQLCache:
 
 
 class UserSQL:
-    def __init__(self, username, db_session, user_model=None):
-        self.username = username
+    def __init__(self, db_session, user_model=None):
+        self.username = None
+        self.twitch_id = None
         self.user_model = user_model
         self.model_loaded = user_model is not None
         self.shared_db_session = db_session
 
-    def select_or_create(db_session, username):
-        user = db_session.query(User).filter_by(username=username).one_or_none()
+    def _select_or_create(self, db_session):
+        user = None
+        if self.twitch_id is not None:
+            q = db_session.query(User)
+            q = q.filter_by(twitch_id=self.twitch_id)
+            user = q.one_or_none()
+
+        if user is None and self.username is not None:
+            # User might not have a twitch_id registered yet
+            q = db_session.query(User).filter_by(username=self.username)
+            user = q.one_or_none()
+
         if user is None:
-            user = User(username)
+            log.debug('[UserSQL] Creating user! {}/{}'.format(self.username, self.twitch_id))
+            user = User()
             db_session.add(user)
+
+        return user
+
+    def select_or_create(self):
+        if self.shared_db_session:
+            user = self._select_or_create(self.shared_db_session)
+        else:
+            with DBManager.create_session_scope(expire_on_commit=False) as db_session:
+                user = self._select_or_create(db_session)
+                db_session.expunge(user)
+
         return user
 
     # @time_method
@@ -120,21 +142,25 @@ class UserSQL:
         # from pajbot.utils import print_traceback
         # print_traceback()
 
-        if self.shared_db_session:
-            user = UserSQL.select_or_create(self.shared_db_session, self.username)
+        self.user_model = self.select_or_create()
+        if self.username is not None:
+            self.user_model.username = self.username
         else:
-            with DBManager.create_session_scope(expire_on_commit=False) as db_session:
-                user = UserSQL.select_or_create(db_session, self.username)
-                db_session.expunge(user)
-
-        self.user_model = user
+            self.username = self.user_model.username
+        if self.twitch_id is not None:
+            self.user_model.twitch_id = self.twitch_id
+        else:
+            self.twitch_id = self.user_model.twitch_id
 
     def sql_save(self, save_to_db=True):
         if not self.model_loaded:
             return
 
+        log.debug('[UserSQL] Saving user model for {}'.format(self.username))
+
         try:
             if save_to_db and not self.shared_db_session:
+                log.debug('[UserSQL] Saving user model for {} to DB'.format(self.username))
                 with DBManager.create_session_scope(expire_on_commit=False) as db_session:
                     # log.debug('Calling db_session.add on {}'.format(self.user_model))
                     db_session.add(self.user_model)
@@ -490,10 +516,12 @@ class UserCombined(UserRedis, UserSQL):
 
     WARNING_SYNTAX = '{prefix}_{username}_warning_{id}'
 
-    def __init__(self, username, db_session=None, user_model=None, redis=None):
-        UserSQL.__init__(self, username, db_session, user_model=user_model)
+    def __init__(self, username=None, twitch_id=None, db_session=None, user_model=None, redis=None):
+        UserSQL.__init__(self, db_session, user_model=user_model)
         UserRedis.__init__(self, username, redis=redis)
 
+        self.username = username
+        self.twitch_id = twitch_id
         self.debts = []
         self.moderator = False
         self.timed_out = False

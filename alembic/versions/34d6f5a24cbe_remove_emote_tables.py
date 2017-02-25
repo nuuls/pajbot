@@ -12,6 +12,9 @@ down_revision = '100b2d456262'
 branch_labels = None
 depends_on = None
 
+import sys
+import os
+
 import argparse
 
 from alembic import context
@@ -22,32 +25,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 
-from pajbot.utils import load_config
-from pajbot.managers.redis import RedisManager
-
-Session = sessionmaker()
-
 Base = declarative_base()
 
-tag = context.get_tag_argument()
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--config', '-c',
-                    default='config.ini',
-                    help='Specify which config file to use '
-                            '(default: config.ini)')
-custom_args = None
-if tag is not None:
-    custom_args = tag.replace('"', '').split()
-args, unknown = parser.parse_known_args(args=custom_args)
-
-pb_config = load_config(args.config)
-
-redis_options = {}
-if 'redis' in pb_config:
-    redis_options = pb_config._sections['redis']
-
-RedisManager.init(**redis_options)
+Session = sessionmaker()
 
 
 class Emote(Base):
@@ -70,6 +50,10 @@ class EmoteStats(Base):
     count = sa.Column(sa.Integer, nullable=False, default=0)
 
 def upgrade():
+    from pajbot.utils import alembic_init
+    from pajbot.managers.redis import RedisManager
+    alembic_init()
+
     bind = op.get_bind()
     session = Session(bind=bind)
 

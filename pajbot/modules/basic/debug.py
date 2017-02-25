@@ -3,6 +3,7 @@ import datetime
 import logging
 
 import pajbot.models
+from pajbot.managers.db import DBManager
 from pajbot.modules import BaseModule
 from pajbot.modules import ModuleType
 from pajbot.modules.basic import BasicCommandsModule
@@ -73,27 +74,31 @@ class DebugModule(BaseModule):
 
         if message and len(message) > 0:
             username = message.split(' ')[0].strip().lower()
-            user = bot.users.find(username)
+            with DBManager.create_session_scope() as db_session:
+                user = bot.users.find(username, db_session=db_session)
 
-            if user is None:
-                bot.whisper(source.username, 'No user with this username found.')
-                return False
+                if user is None:
+                    bot.whisper(source.username, 'No user with this username found.')
+                    return False
 
-            data = collections.OrderedDict()
-            data['id'] = user.id
-            data['level'] = user.level
-            data['num_lines'] = user.num_lines
-            data['points'] = user.points
-            data['last_seen'] = user.last_seen.strftime('%Y-%m-%d %H:%M:%S %Z')
-            try:
-                data['last_active'] = user.last_active.strftime('%Y-%m-%d %H:%M:%S %Z')
-            except:
-                pass
-            data['ignored'] = user.ignored
-            data['banned'] = user.banned
-            data['tokens'] = user.tokens
+                user.sql_load()
 
-            bot.whisper(source.username, ', '.join(['%s=%s' % (key, value) for (key, value) in data.items()]))
+                data = collections.OrderedDict()
+                data['id'] = user.id
+                data['twitch_id'] = user.twitch_id
+                data['level'] = user.level
+                data['num_lines'] = user.num_lines
+                data['points'] = user.points
+                data['last_seen'] = user.last_seen.strftime('%Y-%m-%d %H:%M:%S %Z')
+                try:
+                    data['last_active'] = user.last_active.strftime('%Y-%m-%d %H:%M:%S %Z')
+                except:
+                    pass
+                data['ignored'] = user.ignored
+                data['banned'] = user.banned
+                data['tokens'] = user.tokens
+
+                bot.whisper(source.username, ', '.join(['%s=%s' % (key, value) for (key, value) in data.items()]))
         else:
             bot.whisper(source.username, 'Usage: !debug user USERNAME')
             return False

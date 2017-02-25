@@ -15,7 +15,35 @@ import pajbot.exc
 log = logging.getLogger(__name__)
 
 
+def alembic_init():
+    import argparse
+    from pajbot.utils import load_config
+    from pajbot.managers.redis import RedisManager
+    from alembic import context
+
+    tag = context.get_tag_argument()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', '-c',
+                        default='config.ini',
+                        help='Specify which config file to use '
+                                '(default: config.ini)')
+    custom_args = None
+    if tag is not None:
+        custom_args = tag.replace('"', '').split()
+    args, unknown = parser.parse_known_args(args=custom_args)
+
+    pb_config = load_config(args.config)
+
+    redis_options = {}
+    if 'redis' in pb_config:
+        redis_options = pb_config._sections['redis']
+
+    RedisManager.init(**redis_options)
+
+
 def alembic_upgrade():
+    log.debug('Call alembic upgrade')
     try:
         command_list = ['alembic', 'upgrade', 'head'] + ['--tag="{0}"'.format(' '.join(sys.argv[1:]))]
         p = subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
